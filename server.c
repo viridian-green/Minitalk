@@ -1,18 +1,11 @@
 #include <unistd.h>
-#include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 //A global variable is a variable declared outside of any function and can be
 //accessed and modified by any part of the program.
 
-void client(pid_t pid)
-{
-
-		printf("The PID is %d\n", pid);
-			exit(0);
-
-}
 /*
 void signal_handler(int signum)
 {
@@ -21,29 +14,12 @@ void signal_handler(int signum)
 }
 */
 
-void send_signal(int pid, unsigned char character)
-{
- 	int    i;
- 	unsigned char temp_char;
-
- 	i = 8;
- 	temp_char = character;
- 	while (i--)
- {
-  	temp_char = character >> i;
-  	if (temp_char % 2 == 0)
-   		kill(pid, SIGUSR2);
-  	else
-   		kill(pid, SIGUSR1);
-  	usleep(42);
- }
-}
-
 int main(int argc, char **argv)
 {
 
 	pid_t pid;
 	pid = getpid();
+	printf("The PID is %d\n", pid);
 	//signal(SIGINT, signal_handler);
 	/*
 	int result;
@@ -52,11 +28,9 @@ int main(int argc, char **argv)
 		printf("Signal sucessfully sent.");
 	else
 		printf("failed");
-  	client(pid);
 	*/
+
 	(void)argv;
 	(void)argc;
-	printf("%d", pid);
-
 	return (0);
 }
