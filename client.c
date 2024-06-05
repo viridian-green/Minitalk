@@ -3,30 +3,23 @@
 #include <stdlib.h>
 #include <signal.h>
 
-/*
-void client(pid_t pid, char **argv)
-{
-		printf("The PID is %d\n", pid);
-			exit(0);
-}
-*/
-
 void send_signal(int pid, unsigned char character)
 {
-	printf("%d\n", pid);
  	int    i;
  	unsigned char temp_char;
 
  	i = 8;
  	temp_char = character;
+	printf("received bit");
  	while (i--)
  	{
   	temp_char = character >> i;
-  	if (temp_char % 2 == 0)
+  	if (temp_char % 2 == 0) //if bit is 0
    		kill(pid, SIGUSR2);
   	else
-   		kill(pid, SIGUSR1);
-  	usleep(42);
+   		kill(pid, SIGUSR1); //if bit is 1
+  	usleep(50); //Pause for 50 microseconds to ensure that the signals
+	//are sent with a slight delay to prevent signal flooding.
 	}
 }
 
@@ -34,7 +27,6 @@ int main(int argc, char **argv)
 {
 	pid_t pid;
 	pid = atoi(argv[1]);
-	printf("%d\n", pid);
 	int i = 0;
 	while (argv[2][i])
 	{
