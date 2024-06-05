@@ -26,7 +26,7 @@ void send_signal(int pid, unsigned char character)
 int main(int argc, char **argv)
 {
 	pid_t pid;
-	pid = atoi(argv[1]);
+	pid = atoi(argv[1]); //change this function
 	int i = 0;
 	if (argc != 3)
 	{
