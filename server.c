@@ -6,6 +6,8 @@
 
 //A global variable is a variable declared outside of any function and can be
 //accessed and modified by any part of the program.
+int flag_signal_received = 0;
+#define END_TRANSMISSION '\0'
 
 /*
 void signal_handler(int signum)
@@ -18,8 +20,6 @@ void signal_handler(int signum)
 	exit(0);
 }
 */
-
-#define END_TRANSMISSION 4
 
 void decrypt_signal(int signal)
 {
@@ -35,8 +35,9 @@ void decrypt_signal(int signal)
 		printf("\n");
 	else
    		printf("%c", current_char);
-  	index = 0;
-  	current_char = 0;
+		index = 0;
+  		current_char = 0;
+		flag_signal_received = 1;
 	}
 	else
   		current_char <<= 1;
@@ -54,13 +55,14 @@ int main()
   	signal(SIGUSR2, decrypt_signal);
 	while (1)
 	{
-		printf("Entering pause...\n");
-    	pause();
-    	printf("Exiting pause.\n");
+		if (!flag_signal_received)
+			pause();
+		flag_signal_received = 0;
 	}
 	return (0);
 }
 
+    	//printf("Exiting pause.\n");
 	/*
 	int result;
 	result = kill(pid, SIGTERM);

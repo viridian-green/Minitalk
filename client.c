@@ -10,8 +10,8 @@ void send_signal(int pid, unsigned char character)
 
  	i = 8;
  	temp_char = character;
-	printf("received bit");
- 	while (i--)
+	printf("received bit %d", temp_char);
+ 	while (i-- > 0)
  	{
   	temp_char = character >> i;
   	if (temp_char % 2 == 0) //if bit is 0
@@ -28,11 +28,20 @@ int main(int argc, char **argv)
 	pid_t pid;
 	pid = atoi(argv[1]);
 	int i = 0;
+	if (argc != 3)
+	{
+		printf("Invalid input. Please enter two parameters: \
+		the PID number and a message to be sent.");
+		exit(0);
+	}
+	else
+	{
 	while (argv[2][i])
 	{
 		send_signal(pid, (unsigned char)argv[2][i]);
 		i++;
 	}
-	(void)argc;
-  return 0;
+	//send_signal(pid, '\0');
+	}
+  	return 0;
 }
