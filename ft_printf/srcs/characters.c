@@ -6,13 +6,13 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 15:49:09 by ademarti          #+#    #+#             */
-/*   Updated: 2024/01/08 12:33:57 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/06 14:43:01 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_printf.h"
 
-int	ft_putchar_fd(char c, int fd)
+int	ft_putchar_fd_(char c, int fd)
 {
 	int	count;
 
@@ -22,7 +22,7 @@ int	ft_putchar_fd(char c, int fd)
 	return (count);
 }
 
-void	ft_putstr_fd(char *s, int fd)
+void	ft_putstr_fd_(char *s, int fd)
 {
 	size_t	i;
 
@@ -41,12 +41,12 @@ int	ft_string(char *str)
 	i = 0;
 	if (!str)
 	{
-		ft_putstr_fd("(null)", 1);
+		ft_putstr_fd_("(null)", 1);
 		return (6);
 	}
 	while (str[i] != '\0')
 	{
-		ft_putchar_fd(str[i], 1);
+		ft_putchar_fd_(str[i], 1);
 		i++;
 	}
 	return (i);

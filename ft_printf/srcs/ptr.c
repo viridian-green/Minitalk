@@ -6,7 +6,7 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 15:55:08 by ademarti          #+#    #+#             */
-/*   Updated: 2024/01/10 14:49:59 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/06 14:45:45 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ int	ft_put_ptr(unsigned long long num)
 	else
 	{
 		if (num <= 9)
-			count += ft_putchar_fd((num + '0'), 1);
+			count += ft_putchar_fd_((num + '0'), 1);
 		else
 		{
-			count += ft_putchar_fd((num - 10 + 'a'), 1);
+			count += ft_putchar_fd_((num - 10 + 'a'), 1);
 		}
 	}
 	return (count);

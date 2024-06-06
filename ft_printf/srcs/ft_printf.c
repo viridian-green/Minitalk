@@ -6,7 +6,7 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 13:40:31 by ademarti          #+#    #+#             */
-/*   Updated: 2024/01/10 16:26:08 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/06 14:47:08 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ int	data_type_check(const char *s, va_list args_copy)
 
 	i = 0;
 	if (s[i] == 'c')
-		return (ft_putchar_fd(va_arg(args_copy, int), 1));
+		return (ft_putchar_fd_(va_arg(args_copy, int), 1));
 	else if (s[i] == 's')
 		return (ft_string(va_arg(args_copy, char *)));
 	else if (s[i] == '%')
 		return (write(1, "%", 1));
 	else if (s[i] == 'd' || s[i] == 'i')
-		return (ft_putnbr_fd(va_arg(args_copy, int), 1));
+		return (ft_putnbr_fd_(va_arg(args_copy, int), 1));
 	else if (s[i] == 'u')
 		return (ft_putnbr_fd_un(va_arg(args_copy, unsigned int), 1));
 	else if (s[i] == 'x' )

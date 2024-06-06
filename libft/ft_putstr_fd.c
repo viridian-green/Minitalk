@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ademarti <adelemartin@student.42.fr>       +#+  +:+       +#+        */
+/*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 19:15:40 by adelemartin       #+#    #+#             */
-/*   Updated: 2023/12/07 17:44:29 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/06 14:44:15 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
 
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -23,3 +24,4 @@ void	ft_putstr_fd(char *s, int fd)
 		i++;
 	}
 }
+

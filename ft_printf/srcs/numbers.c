@@ -6,13 +6,13 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 15:51:28 by ademarti          #+#    #+#             */
-/*   Updated: 2024/01/05 16:51:00 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/06 14:47:29 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_printf.h"
 
-int	ft_putnbr_fd(int n, int fd)
+int	ft_putnbr_fd_(int n, int fd)
 {
 	int	count;
 
@@ -24,14 +24,14 @@ int	ft_putnbr_fd(int n, int fd)
 	}
 	if (n < 0)
 	{
-		count += ft_putchar_fd('-', fd);
+		count += ft_putchar_fd_('-', fd);
 		n = -n;
 	}
 	if (n >= 10)
 	{
-		count += ft_putnbr_fd(n / 10, fd);
+		count += ft_putnbr_fd_(n / 10, fd);
 	}
-	count += ft_putchar_fd(n % 10 + '0', fd);
+	count += ft_putchar_fd_(n % 10 + '0', fd);
 	return (count);
 }
 
@@ -42,9 +42,9 @@ int	ft_putnbr_fd_un(unsigned int n, int fd)
 	count = 0;
 	if (n >= 10)
 	{
-		count += ft_putnbr_fd(n / 10, fd);
+		count += ft_putnbr_fd_(n / 10, fd);
 	}
-	count += ft_putchar_fd(n % 10 + '0', fd);
+	count += ft_putchar_fd_(n % 10 + '0', fd);
 	return (count);
 }
 
@@ -61,7 +61,7 @@ int	ft_hexa_lowercase(unsigned int c)
 	else
 	{
 		if (c <= 9)
-			count += ft_putchar_fd((c + '0'), 1);
+			count += ft_putchar_fd_((c + '0'), 1);
 		else if (c == 0)
 		{
 			count += write(1, "0", 1);
@@ -69,7 +69,7 @@ int	ft_hexa_lowercase(unsigned int c)
 		}
 		else
 		{
-			count += ft_putchar_fd((c - 10 + 'a'), 1);
+			count += ft_putchar_fd_((c - 10 + 'a'), 1);
 		}
 	}
 	return (count);
@@ -88,7 +88,7 @@ int	ft_hexa_uppercase(unsigned int c)
 	else
 	{
 		if (c <= 9)
-			count += ft_putchar_fd((c + '0'), 1);
+			count += ft_putchar_fd_((c + '0'), 1);
 		else if (c == 0)
 		{
 			count += write(1, "0", 1);
@@ -96,7 +96,7 @@ int	ft_hexa_uppercase(unsigned int c)
 		}
 		else
 		{
-			count += ft_putchar_fd((c - 10 + 'A'), 1);
+			count += ft_putchar_fd_((c - 10 + 'A'), 1);
 		}
 	}
 	return (count);
