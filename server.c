@@ -1,5 +1,3 @@
-//Ask more questions about why this is happening!!!
-
 #include <signal.h>
 #include <sys/types.h>
 #include "ft_printf/include/ft_printf.h"
@@ -8,12 +6,6 @@
 //accessed and modified by any part of the program.
 static int flag_signal_received = 0;
 #define END_TRANSMISSION '\0'
-
-// static void initialize_sa(void)
-// {
-// 	struct sigaction sa;
-// 	sa.sa_handler = decrypt_signal;
-// }
 
 void	decrypt_signal(int signal)
 {
@@ -33,6 +25,7 @@ void	decrypt_signal(int signal)
 		index = 0;
 		current_char = 0;
 		flag_signal_received = 1;
+		kill(getpid(), SIGUSR1);
 	}
 	}
 	else
@@ -47,11 +40,6 @@ int	main()
 
 	pid = getpid();
 	ft_printf("The PID is number is %d", pid);
-	// sa.sa_handler = decrypt_signal;
-	// sigemptyset(&sa.sa_mask);
-	// sa.sa_flags = SA_RESTART; // Restart interrupted functions
-	// sigaction(SIGUSR1, &sa, NULL);
-	// sigaction(SIGUSR2, &sa, NULL)
 	signal(SIGUSR1, decrypt_signal);
 	signal(SIGUSR2, decrypt_signal);
 	while (1)

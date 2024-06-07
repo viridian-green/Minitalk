@@ -5,6 +5,14 @@
 
 // "Here, it is: for many, the first day of going back into the routine of work, school, volunteer roles and so many more activities, with the hectic hustle of the holidays behind us — looking down 364 days of new and exciting ways of doing things, of doing something you’ve want done for decades the same way but you think — given your extensive experience — you can go about it differently, bringing more productivity, more satisfaction, being an example to others around you, and — you know what they say about flattery — they start do the same thing because … you showed the way."
 
+static int ack_received = 0;
+
+void ack_handler(int signal)
+{
+    (void)signal;  // Explicitly mark the parameter as unused
+    ack_received = 1;
+}
+
 void	send_signal(int pid, unsigned char character)
 {
 	int	i;
@@ -19,6 +27,11 @@ void	send_signal(int pid, unsigned char character)
 			kill(pid, SIGUSR2);
 	else
 		kill(pid, SIGUSR1); //if bit is 1
+	while (!ack_received)
+	{
+		pause();
+	}
+	ack_received = 0;
 	usleep(200);
 	}
 }
@@ -29,6 +42,7 @@ int	main(int argc, char **argv)
 	int	i;
 
 	pid = ft_atoi(argv[1]);
+	signal(SIGUSR1, ack_handler);
 	i = 0;
 	if (argc != 3)
 	{
@@ -43,7 +57,7 @@ int	main(int argc, char **argv)
 		send_signal(pid, (unsigned char)argv[2][i]);
 		i++;
 	}
-	send_signal(pid, '\0');
+	// send_signal(pid, '\0');
 	}
 	return 0;
 }
