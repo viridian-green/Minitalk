@@ -15,18 +15,18 @@ void ack_handler(int signal)
     ack_received = 1;
 }
 
-static void	signal_handler(int signum, siginfo_t *info, void *context)
-{
-	(void)info;
-	(void)context;
-	if (signum == SIGUSR2)
-	{
-		ft_printf("Message received!\n");
-		exit(EXIT_SUCCESS);
-	}
-}
+// static void	signal_handler(int signal, siginfo_t *info, void *context)
+// {
+// 	(void)info;
+// 	(void)context;
+// 	if (signal == SIGUSR2)
+// 	{
+// 		ft_printf("Message received!\n");
+// 		exit(EXIT_SUCCESS);
+// 	}
+// }
 
-static int	send_signal(int pid, unsigned char character)
+void	send_signal(int pid, unsigned char character)
 {
 	int	i;
 	unsigned char temp_char;
@@ -35,7 +35,7 @@ static int	send_signal(int pid, unsigned char character)
 	temp_char = character;
 	while (i--)
 	{
-	temp_char = character >> i;
+	temp_char = temp_char >> i;
 		if (temp_char % 2 == 0) //if bit is 0
 			kill(pid, SIGUSR2);
 	else
@@ -52,20 +52,16 @@ static int	send_signal(int pid, unsigned char character)
 int	main(int argc, char **argv)
 {
 	pid_t	pid;
-	int	i;
-
+	int	i = 0;
 	pid = ft_atoi(argv[1]);
-	struct sigaction	s;
+	// struct sigaction	s;
 
-	s.sa_handler = signal_handler;
-	s.sa_flags = SA_SIGINFO;
+	// s.sa_handler = signal_handler;
+	// s.sa_flags = SA_SIGINFO;
 	// if (sigaction(SIGUSR1, &s, 0) == -1)
-	// 	return (ft_printf_fd(2, "Error sigaction\n"));
-	// if (send_signal(av[2], pid) == -1)
-	// 	return (ft_printf_fd(2, "Error kill\n"));
-	// signal(SIGUSR1, ack_handler);
-
-	i = 0;
+	// 	return (ft_printf("Error sigaction\n"));
+	// if (send_signal(pid, (unsigned char)argv[2][i]) == -1)
+	// 	return (ft_printf("Error kill\n"));
 	if (argc != 3)
 	{
 		ft_printf("Invalid input. Please enter two parameters: \
