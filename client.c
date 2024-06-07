@@ -1,5 +1,7 @@
-#include <signal.h>
 #include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <signal.h>
 #include "libft/libft.h"
 #include "ft_printf/include/ft_printf.h"
 
@@ -13,7 +15,18 @@ void ack_handler(int signal)
     ack_received = 1;
 }
 
-void	send_signal(int pid, unsigned char character)
+static void	signal_handler(int signum, siginfo_t *info, void *context)
+{
+	(void)info;
+	(void)context;
+	if (signum == SIGUSR2)
+	{
+		ft_printf("Message received!\n");
+		exit(EXIT_SUCCESS);
+	}
+}
+
+static int	send_signal(int pid, unsigned char character)
 {
 	int	i;
 	unsigned char temp_char;
@@ -38,11 +51,20 @@ void	send_signal(int pid, unsigned char character)
 
 int	main(int argc, char **argv)
 {
-	int	pid;
+	pid_t	pid;
 	int	i;
 
 	pid = ft_atoi(argv[1]);
-	signal(SIGUSR1, ack_handler);
+	struct sigaction	s;
+
+	s.sa_handler = signal_handler;
+	s.sa_flags = SA_SIGINFO;
+	// if (sigaction(SIGUSR1, &s, 0) == -1)
+	// 	return (ft_printf_fd(2, "Error sigaction\n"));
+	// if (send_signal(av[2], pid) == -1)
+	// 	return (ft_printf_fd(2, "Error kill\n"));
+	// signal(SIGUSR1, ack_handler);
+
 	i = 0;
 	if (argc != 3)
 	{
@@ -57,7 +79,7 @@ int	main(int argc, char **argv)
 		send_signal(pid, (unsigned char)argv[2][i]);
 		i++;
 	}
-	// send_signal(pid, '\0');
+	 send_signal(pid, '\0');
 	}
 	return 0;
 }
