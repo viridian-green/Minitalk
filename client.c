@@ -7,25 +7,6 @@
 
 // "Here, it is: for many, the first day of going back into the routine of work, school, volunteer roles and so many more activities, with the hectic hustle of the holidays behind us — looking down 364 days of new and exciting ways of doing things, of doing something you’ve want done for decades the same way but you think — given your extensive experience — you can go about it differently, bringing more productivity, more satisfaction, being an example to others around you, and — you know what they say about flattery — they start do the same thing because … you showed the way."
 
-// static int ack_received = 0;
-
-// void ack_handler(int signal)
-// {
-//     (void)signal;  // Explicitly mark the parameter as unused
-//     ack_received = 1;
-// }
-
-// static void	signal_handler(int signal, siginfo_t *info, void *context)
-// {
-// 	(void)info;
-// 	(void)context;
-// 	if (signal == SIGUSR2)
-// 	{
-// 		ft_printf("Message received!\n");
-// 		exit(EXIT_SUCCESS);
-// 	}
-// }
-
 void	sig_handler(int signum)
 {
 	if (signum == SIGUSR2)
@@ -44,12 +25,14 @@ void	send_signal(int pid, unsigned char character)
 	temp_char = character;
 	while (i--)
 	{
-	temp_char = temp_char >> i;
+	temp_char = character >> i;
 		if (temp_char % 2 == 0) //if bit is 0
 			kill(pid, SIGUSR2);
 	else
 		kill(pid, SIGUSR1); //if bit is 1
-	usleep(42);
+	if (kill(pid, SIGUSR2) == -1) {
+                ft_printf("Error sending signal.\n");
+	usleep(250);
 	}
 }
 
@@ -57,12 +40,12 @@ void structure_init(void)
 {
 	struct sigaction	s;
 
-	s.sa_handler = &sig_handler;
 	s.sa_flags = SA_SIGINFO;
+	s.sa_handler = &sig_handler;
 	if (sigaction(SIGUSR1, &s, NULL) == -1)
 		ft_printf("Error sigaction\n");
-	if (sigaction(SIGUSR2, &s, NULL) == -1)
-		ft_printf("Error kill\n");
+	// if (sigaction(SIGUSR2, &s, NULL) == -1)
+	// 	ft_printf("Error kill\n");
 
 }
 

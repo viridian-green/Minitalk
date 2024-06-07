@@ -41,29 +41,15 @@ void	signal_handler(int signal, siginfo_t *info, void *context)
 		current_char = 0;
 		flag_signal_received = 1;
 		if (kill(info->si_pid, SIGUSR1) == -1)
+		{
 			ft_printf("Error. Server failed to send the ack signal to client.");
-		return ;
+			exit(1);
+		}
 	}
 	}
 	else
 		current_char <<= 1;
 }
-
-// static void	signal_handler(int sig, siginfo_t *info, void *ucontext)
-// {
-// 	(void)info;
-// 	(void)ucontext;
-// 	if (sig == SIGUSR1)
-// 	{
-// 		if (ft_send(NULL, -1) == -1)
-// 		{
-// 			ft_printf_fd(2, "Error kill\n");
-// 			exit(1);
-// 		}
-// 	}
-// }
-//we use static variables because we want to keep the information even after
-//the function is done executing.
 
 #include <signal.h>
 #include <unistd.h>
@@ -72,11 +58,11 @@ void	signal_handler(int signal, siginfo_t *info, void *context)
 
 int	main()
 {
+	ft_printf("The PID is number is %d", getpid());
 	struct sigaction	s;
 	s.sa_flags = SA_SIGINFO;
 	s.sa_sigaction = signal_handler;
-	sigemptyset(&s.sa_mask);
-	ft_printf("The PID is number is %d", getpid());
+	// sigemptyset(&s.sa_mask);
 	if (sigaction(SIGUSR1, &s, NULL) == -1)
 	{
 		ft_printf("Failed to register SIGUSR1 signal handler\n");
@@ -87,8 +73,6 @@ int	main()
 		ft_printf("Failed to register SIGUSR2 signal handler\n");
 		exit(0);
 	}
-	// sigaction(SIGUSR1, &s, NULL);
-	// sigaction(SIGUSR2, &s, NULL);
 	while (1)
 	{
 		if (!flag_signal_received)
