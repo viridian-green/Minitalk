@@ -7,13 +7,13 @@
 
 // "Here, it is: for many, the first day of going back into the routine of work, school, volunteer roles and so many more activities, with the hectic hustle of the holidays behind us — looking down 364 days of new and exciting ways of doing things, of doing something you’ve want done for decades the same way but you think — given your extensive experience — you can go about it differently, bringing more productivity, more satisfaction, being an example to others around you, and — you know what they say about flattery — they start do the same thing because … you showed the way."
 
-static int ack_received = 0;
+// static int ack_received = 0;
 
-void ack_handler(int signal)
-{
-    (void)signal;  // Explicitly mark the parameter as unused
-    ack_received = 1;
-}
+// void ack_handler(int signal)
+// {
+//     (void)signal;  // Explicitly mark the parameter as unused
+//     ack_received = 1;
+// }
 
 // static void	signal_handler(int signal, siginfo_t *info, void *context)
 // {
@@ -25,6 +25,15 @@ void ack_handler(int signal)
 // 		exit(EXIT_SUCCESS);
 // 	}
 // }
+
+void	sig_handler(int signum)
+{
+	if (signum == SIGUSR2)
+	{
+		ft_printf("Message received!\n");
+		exit(EXIT_SUCCESS);
+	}
+}
 
 void	send_signal(int pid, unsigned char character)
 {
@@ -40,28 +49,26 @@ void	send_signal(int pid, unsigned char character)
 			kill(pid, SIGUSR2);
 	else
 		kill(pid, SIGUSR1); //if bit is 1
-	while (!ack_received)
-	{
-		pause();
+	usleep(42);
 	}
-	ack_received = 0;
-	usleep(200);
-	}
+}
+
+void structure_init(void)
+{
+	struct sigaction	s;
+
+	s.sa_handler = &sig_handler;
+	s.sa_flags = SA_SIGINFO;
+	if (sigaction(SIGUSR1, &s, NULL) == -1)
+		ft_printf("Error sigaction\n");
+	if (sigaction(SIGUSR2, &s, NULL) == -1)
+		ft_printf("Error kill\n");
+
 }
 
 int	main(int argc, char **argv)
 {
-	pid_t	pid;
-	int	i = 0;
-	pid = ft_atoi(argv[1]);
-	// struct sigaction	s;
 
-	// s.sa_handler = signal_handler;
-	// s.sa_flags = SA_SIGINFO;
-	// if (sigaction(SIGUSR1, &s, 0) == -1)
-	// 	return (ft_printf("Error sigaction\n"));
-	// if (send_signal(pid, (unsigned char)argv[2][i]) == -1)
-	// 	return (ft_printf("Error kill\n"));
 	if (argc != 3)
 	{
 		ft_printf("Invalid input. Please enter two parameters: \
@@ -70,12 +77,16 @@ int	main(int argc, char **argv)
 	}
 	else
 	{
+	pid_t	pid;
+	int	i = 0;
+	pid = ft_atoi(argv[1]);
+	structure_init();
 	while (argv[2][i])
 	{
 		send_signal(pid, (unsigned char)argv[2][i]);
 		i++;
 	}
-	 send_signal(pid, '\0');
+	send_signal(pid, '\0');
 	}
 	return 0;
 }

@@ -40,7 +40,9 @@ void	signal_handler(int signal, siginfo_t *info, void *context)
 		index = 0;
 		current_char = 0;
 		flag_signal_received = 1;
-		kill(client_pid, SIGUSR1);
+		if (kill(info->si_pid, SIGUSR1) == -1)
+			ft_printf("Error. Server failed to send the ack signal to client.");
+		return ;
 	}
 	}
 	else
@@ -75,8 +77,18 @@ int	main()
 	s.sa_sigaction = signal_handler;
 	sigemptyset(&s.sa_mask);
 	ft_printf("The PID is number is %d", getpid());
-	sigaction(SIGUSR1, &s, NULL);
-	sigaction(SIGUSR2, &s, NULL);
+	if (sigaction(SIGUSR1, &s, NULL) == -1)
+	{
+		ft_printf("Failed to register SIGUSR1 signal handler\n");
+		exit(0);
+	}
+	else if (sigaction(SIGUSR2, &s, NULL) == -1)
+	{
+		ft_printf("Failed to register SIGUSR2 signal handler\n");
+		exit(0);
+	}
+	// sigaction(SIGUSR1, &s, NULL);
+	// sigaction(SIGUSR2, &s, NULL);
 	while (1)
 	{
 		if (!flag_signal_received)
