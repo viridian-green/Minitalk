@@ -1,75 +1,70 @@
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <signal.h>
-#include "libft/libft.h"
-#include "ft_printf/include/ft_printf.h"
+#include "minitalk.h"
 
-// "Here, it is: for many, the first day of going back into the routine of work, school, volunteer roles and so many more activities, with the hectic hustle of the holidays behind us — looking down 364 days of new and exciting ways of doing things, of doing something you’ve want done for decades the same way but you think — given your extensive experience — you can go about it differently, bringing more productivity, more satisfaction, being an example to others around you, and — you know what they say about flattery — they start do the same thing because … you showed the way."
+static int g_signal_received = 0;
 
-void	sig_handler(int signum)
+void ft_resp_handler(int signum)
 {
-	if (signum == SIGUSR2)
-	{
-		ft_printf("Message received!\n");
-		exit(EXIT_SUCCESS);
-	}
+	g_signal_received = 1;
+	(void)signum;
 }
 
-void	send_signal(int pid, unsigned char character)
+void ft_send_bit(int pid, int bit)
 {
-	int	i;
-	unsigned char temp_char;
+	int signal;
 
-	i = 8;
-	temp_char = character;
-	while (i--)
-	{
-	temp_char = character >> i;
-		if (temp_char % 2 == 0) //if bit is 0
-			kill(pid, SIGUSR2);
+	if (bit == 1)
+		signal = SIGUSR1;
 	else
-		kill(pid, SIGUSR1); //if bit is 1
-	if (kill(pid, SIGUSR2) == -1) {
-                ft_printf("Error sending signal.\n");
-	usleep(250);
+		signal = SIGUSR2;
+	if (kill(pid, signal) == -1)
+	{
+		ft_putstr_fd("Error. Failed to send signal", 2);
+		exit(1);
+	}
+	while (g_signal_received == 0)
+		usleep(16);
+	g_signal_received = 0;
+}
+
+void ft_send_char(int pid, unsigned char c)
+{
+	int bit;
+
+	bit = 7;
+	while (bit >= 0)
+	{
+		ft_send_bit(pid, (c >> bit) & 1);
+		usleep(400);
+		bit--;
 	}
 }
 
-void structure_init(void)
+void ft_send_string(int pid, const char *str)
 {
-	struct sigaction	s;
-
-	s.sa_flags = SA_SIGINFO;
-	s.sa_handler = &sig_handler;
-	if (sigaction(SIGUSR1, &s, NULL) == -1)
-		ft_printf("Error sigaction\n");
-	// if (sigaction(SIGUSR2, &s, NULL) == -1)
-	// 	ft_printf("Error kill\n");
-
+	while (*str)
+		ft_send_char(pid, *str++);
+	ft_send_char(pid, '\0');
 }
 
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
+	pid_t pid;
+	int i;
 
+	pid = ft_atoi(argv[1]);
+	i = 0;
 	if (argc != 3)
 	{
 		ft_printf("Invalid input. Please enter two parameters: \
 		the PID number and a message to be sent.");
 		exit(0);
 	}
-	else
+	if (pid <= 0)
 	{
-	pid_t	pid;
-	int	i = 0;
-	pid = ft_atoi(argv[1]);
-	structure_init();
-	while (argv[2][i])
-	{
-		send_signal(pid, (unsigned char)argv[2][i]);
-		i++;
+		ft_putstr_fd("Invalid PID\n", 2);
+		exit(EXIT_FAILURE);
 	}
-	send_signal(pid, '\0');
-	}
+	signal(SIGUSR2, ft_resp_handler);
+	ft_send_string(pid, argv[2]);
 	return 0;
 }
