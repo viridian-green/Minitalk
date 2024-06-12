@@ -6,7 +6,7 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:36:48 by ademarti          #+#    #+#             */
-/*   Updated: 2024/06/12 16:50:01 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:42:15 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	signal_handler(int signum, siginfo_t *info, void *context)
 {
-	static unsigned char	character;
+	static unsigned char	c;
 	static int				bit_count;
 	static pid_t			client_pid;
 
@@ -22,18 +22,20 @@ void	signal_handler(int signum, siginfo_t *info, void *context)
 	if (client_pid != info->si_pid)
 	{
 		bit_count = 0;
-		character = 0;
+		c = 0;
 	}
 	client_pid = info->si_pid;
-	character = character << 1;
+	c = c << 1;
 	if (signum == SIGUSR1)
-		character = character | 1;
+		c = c | 1;
+	else if (signum == SIGUSR2)
+		c = c | 0;
 	bit_count++;
 	if (bit_count == 8)
 	{
-		write(1, &character, 1);
+		write(1, &c, 1);
 		bit_count = 0;
-		character = 0;
+		c = 0;
 	}
 	kill(client_pid, SIGUSR2);
 }
