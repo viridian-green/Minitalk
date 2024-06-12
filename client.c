@@ -6,23 +6,23 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:36:41 by ademarti          #+#    #+#             */
-/*   Updated: 2024/06/12 14:56:40 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:10:52 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int g_signal_received = 0;
+int	g_signal_received = 0;
 
-void catch_signal_from_server(int signum)
+void	catch_signal_from_server(int signal)
 {
-	(void)signum;
+	(void)signal;
 	g_signal_received = 1;
 }
 
-void send_bit(int pid, int bit)
+void	send_bit(int pid, int bit)
 {
-	int signal;
+	int	signal;
 
 	if (bit == 1)
 		signal = SIGUSR1;
@@ -38,9 +38,9 @@ void send_bit(int pid, int bit)
 	g_signal_received = 0;
 }
 
-void char_to_bit(int pid, unsigned char c)
+void	char_to_bit(int pid, unsigned char c)
 {
-	int bit;
+	int	bit;
 
 	bit = 7;
 	while (bit >= 0)
@@ -50,34 +50,29 @@ void char_to_bit(int pid, unsigned char c)
 		bit--;
 	}
 }
-
-void send_string(int pid, const char *str)
+void	handle_arguments(int argc)
 {
-	while (*str)
-		char_to_bit(pid, *str++);
-	char_to_bit(pid, '\0');
-}
-
-int main(int argc, char **argv)
-{
-	pid_t pid;
-	int i;
-
-	pid = ft_atoi(argv[1]);
-	i = 0;
 	if (argc != 3)
 	{
 		ft_printf("Invalid input. Please enter two parameters: \
-		the PID number and a message to be sent.");
-		exit(0);
-	}
-	if (pid <= 0)
-	{
-		ft_putstr_fd("Invalid PID\n", 2);
+		the server's PID number and a message to be sent.", 2);
 		exit(1);
 	}
-	signal(SIGUSR2, catch_signal_from_server);
-	send_string(pid, argv[2]);
-	return 0;
 }
-//Signal handler does not take '()' because it is not proceeded directly
+
+int	main(int argc, char **argv)
+{
+	pid_t	pid;
+	char *str;
+
+	pid = ft_atoi(argv[1]);
+	str = argv[2];
+	handle_arguments(argc);
+	signal(SIGUSR2, catch_signal_from_server);
+	while (*str)
+	{
+		char_to_bit(pid, (unsigned char)*str++);
+	}
+	char_to_bit(pid, '\0');
+	return (0);
+}
