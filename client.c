@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/12 14:36:41 by ademarti          #+#    #+#             */
+/*   Updated: 2024/06/12 14:56:40 by ademarti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 
-static int g_signal_received = 0;
+int g_signal_received = 0;
 
-void ft_resp_handler(int signum)
+void catch_signal_from_server(int signum)
 {
-	g_signal_received = 1;
 	(void)signum;
+	g_signal_received = 1;
 }
 
-void ft_send_bit(int pid, int bit)
+void send_bit(int pid, int bit)
 {
 	int signal;
 
@@ -18,32 +30,32 @@ void ft_send_bit(int pid, int bit)
 		signal = SIGUSR2;
 	if (kill(pid, signal) == -1)
 	{
-		ft_putstr_fd("Error. Failed to send signal", 2);
+		ft_putstr_fd("Error. Failed to send signal to server.", 2);
 		exit(1);
 	}
 	while (g_signal_received == 0)
-		usleep(16);
+		usleep(20);
 	g_signal_received = 0;
 }
 
-void ft_send_char(int pid, unsigned char c)
+void char_to_bit(int pid, unsigned char c)
 {
 	int bit;
 
 	bit = 7;
 	while (bit >= 0)
 	{
-		ft_send_bit(pid, (c >> bit) & 1);
+		send_bit(pid, (c >> bit) & 1);
 		usleep(400);
 		bit--;
 	}
 }
 
-void ft_send_string(int pid, const char *str)
+void send_string(int pid, const char *str)
 {
 	while (*str)
-		ft_send_char(pid, *str++);
-	ft_send_char(pid, '\0');
+		char_to_bit(pid, *str++);
+	char_to_bit(pid, '\0');
 }
 
 int main(int argc, char **argv)
@@ -62,9 +74,10 @@ int main(int argc, char **argv)
 	if (pid <= 0)
 	{
 		ft_putstr_fd("Invalid PID\n", 2);
-		exit(EXIT_FAILURE);
+		exit(1);
 	}
-	signal(SIGUSR2, ft_resp_handler);
-	ft_send_string(pid, argv[2]);
+	signal(SIGUSR2, catch_signal_from_server);
+	send_string(pid, argv[2]);
 	return 0;
 }
+//Signal handler does not take '()' because it is not proceeded directly

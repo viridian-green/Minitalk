@@ -6,7 +6,7 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:02:07 by ademarti          #+#    #+#             */
-/*   Updated: 2024/06/12 14:02:16 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:57:24 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 #include <sys/types.h>
 #include <signal.h>
-#include <unistd.h>
-#include <stdlib.h>
+// #include <unistd.h>
+// #include <stdlib.h>
 #include "libft/libft.h"
 #include "ft_printf/include/ft_printf.h"
 
