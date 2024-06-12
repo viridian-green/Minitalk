@@ -6,7 +6,7 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:36:41 by ademarti          #+#    #+#             */
-/*   Updated: 2024/06/12 18:28:29 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/12 20:56:04 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	char_to_bit(int pid, unsigned char c)
 		bit--;
 	}
 }
+
 void	handle_arguments(int argc)
 {
 	if (argc != 3)
@@ -63,7 +64,7 @@ void	handle_arguments(int argc)
 int	main(int argc, char **argv)
 {
 	pid_t	pid;
-	char *str;
+	char	*str;
 
 	pid = ft_atoi(argv[1]);
 	str = argv[2];

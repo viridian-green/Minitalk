@@ -2,6 +2,7 @@
 	"files.associations": {
 		"signal.h": "c",
 		"ft_printf.h": "c",
-		"types.h": "c"
+		"types.h": "c",
+		"minitalk.h": "c"
 	}
 }

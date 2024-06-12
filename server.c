@@ -6,7 +6,7 @@
 /*   By: ademarti <ademarti@student.42berlin.de     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:36:48 by ademarti          #+#    #+#             */
-/*   Updated: 2024/06/12 18:42:15 by ademarti         ###   ########.fr       */
+/*   Updated: 2024/06/12 20:59:49 by ademarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ void	signal_handler(int signum, siginfo_t *info, void *context)
 	kill(client_pid, SIGUSR2);
 }
 
-
-int	main()
+int	main(void)
 {
 	struct sigaction	sa;
 
@@ -49,17 +48,17 @@ int	main()
 	sa.sa_sigaction = &signal_handler;
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
- 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 	{
 		ft_putstr_fd("Error. Failed to set up signal handler for SIGUSR1.", 2);
 		exit(1);
 	}
- 	if (sigaction(SIGUSR2, &sa, NULL) == -1)
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
 	{
 		ft_putstr_fd("Error. Failed to set up signal handler for SIGUSR1.", 2);
 		exit(1);
 	}
 	while (1)
-			pause();
+		pause();
 	return (0);
 }
